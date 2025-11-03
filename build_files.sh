@@ -1,5 +1,7 @@
 #!/bin/bash
 
+python3.9 -m pip install -r requirements.txt
+
 # Create directories
 mkdir -p staticfiles_build/static/media
 
@@ -8,8 +10,7 @@ if [ -d "static/media" ]; then
     cp -r static/media/* staticfiles_build/static/media/ || true
 fi
 
-# Install dependencies
-python3.9 -m pip install -r requirements.txt
+
 
 # Collect static files
 python3.9 manage.py collectstatic --noinput --clear
