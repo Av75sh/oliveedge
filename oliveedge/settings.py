@@ -1,20 +1,14 @@
 import os
-import dj_database_url
 from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-your-secret-key-change-in-production')
 
-# DEBUG should be False in production
+# Important: Allow DEBUG from environment
 DEBUG = os.environ.get('DEBUG', 'False') == 'True'
 
-# Update allowed hosts for Render
-ALLOWED_HOSTS = [
-    '.onrender.com',
-    'localhost',
-    '127.0.0.1',
-]
+ALLOWED_HOSTS = ['*']  # Temporarily allow all hosts to diagnose
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -62,14 +56,13 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'oliveedge.wsgi.application'
 
-# Database configuration for Render (PostgreSQL)
-# Falls back to SQLite for local development
+# Database - SQLite won't work on Vercel (read-only filesystem)
+# You'll need to use a remote database or just for static demo
 DATABASES = {
-    'default': dj_database_url.config(
-        default=f'sqlite:///{BASE_DIR / "db.sqlite3"}',
-        conn_max_age=600,
-        conn_health_checks=True,
-    )
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+    }
 }
 
 AUTH_PASSWORD_VALIDATORS = [
@@ -84,17 +77,17 @@ TIME_ZONE = 'Asia/Kolkata'
 USE_I18N = True
 USE_TZ = True
 
-# Static files configuration
+# Static files
 STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
-if (BASE_DIR / 'static').exists():
-    STATICFILES_DIRS = [BASE_DIR / 'static']
+STATICFILES_DIRS = [
+    BASE_DIR / 'static',
+]
 
-# WhiteNoise configuration for efficient static file serving
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
-# Media files
+# Media files (won't work on Vercel - use cloud storage for production)
 MEDIA_URL = '/static/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
@@ -106,7 +99,7 @@ LOGIN_URL = 'accounts:login'
 
 CART_SESSION_ID = 'cart'
 
-# Logging configuration
+# Logging to see errors
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
@@ -118,12 +111,5 @@ LOGGING = {
     'root': {
         'handlers': ['console'],
         'level': 'INFO',
-    },
-    'loggers': {
-        'django': {
-            'handlers': ['console'],
-            'level': os.getenv('DJANGO_LOG_LEVEL', 'INFO'),
-            'propagate': False,
-        },
     },
 }
