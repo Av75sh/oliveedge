@@ -43,7 +43,12 @@ class Product(models.Model):
     slug = models.SlugField(unique=True, blank=True)
     description = models.TextField()
     price = models.DecimalField(max_digits=10, decimal_places=2)
+    
+    # CHANGED: Removed 'media/' prefix since MEDIA_ROOT already points to static/media/
+    # Old: image = models.ImageField(upload_to='media/products/%Y/%m/%d/', blank=True)
+    # New: Just use the relative path from MEDIA_ROOT
     image = models.ImageField(upload_to='products/%Y/%m/%d/', blank=True)
+    
     available_sizes = models.JSONField(default=list)  # ['S', 'M', 'L']
     stock = models.PositiveIntegerField(default=0)
     available = models.BooleanField(default=True)
