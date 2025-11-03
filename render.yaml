@@ -7,7 +7,7 @@ services:
   - type: web
     name: oliveedge
     runtime: python
-    buildCommand: "./build.sh"
+    buildCommand: "pip install -r requirements.txt && python manage.py collectstatic --no-input && python manage.py migrate"
     startCommand: "gunicorn oliveedge.wsgi:application"
     envVars:
       - key: PYTHON_VERSION
