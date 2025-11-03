@@ -1,15 +1,19 @@
 #!/bin/bash
 
-# Install dependencies
-pip install -r requirements.txt
-
-# Copy media to static for Vercel
+# Create directories
 mkdir -p staticfiles_build/static/media
-cp -r static/media/* staticfiles_build/static/media/ 2>/dev/null || :
+
+# Copy media files
+if [ -d "static/media" ]; then
+    cp -r static/media/* staticfiles_build/static/media/ || true
+fi
+
+# Install dependencies
+python3.9 -m pip install -r requirements.txt
 
 # Collect static files
-python manage.py collectstatic --noinput --clear
+python3.9 manage.py collectstatic --noinput --clear
 
-# Make migrations
-python manage.py makemigrations --noinput
-python manage.py migrate --noinput
+# Make migrations (optional - comment out if you have existing DB)
+python3.9 manage.py makemigrations --noinput || true
+python3.9 manage.py migrate --noinput || true
