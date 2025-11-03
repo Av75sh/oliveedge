@@ -87,7 +87,7 @@ if (BASE_DIR / 'static').exists():
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # Media files (won't work on Vercel - use cloud storage for production)
-MEDIA_URL = '/media/'
+MEDIA_URL = '/static/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
