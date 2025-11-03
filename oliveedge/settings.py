@@ -5,9 +5,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-your-secret-key-change-in-production')
 
+# Important: Allow DEBUG from environment
 DEBUG = os.environ.get('DEBUG', 'False') == 'True'
 
-ALLOWED_HOSTS = ['.vercel.app', '.now.sh', 'localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['*']  # Temporarily allow all hosts to diagnose
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -55,6 +56,8 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'oliveedge.wsgi.application'
 
+# Database - SQLite won't work on Vercel (read-only filesystem)
+# You'll need to use a remote database or just for static demo
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
@@ -74,20 +77,18 @@ TIME_ZONE = 'Asia/Kolkata'
 USE_I18N = True
 USE_TZ = True
 
-# Static files configuration for Vercel
+# Static files
 STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
-# Only include STATICFILES_DIRS if you have a static folder in root
-if os.path.exists(BASE_DIR / 'static'):
+if (BASE_DIR / 'static').exists():
     STATICFILES_DIRS = [BASE_DIR / 'static']
 
-# Media files
-MEDIA_URL = '/static/media/'
-MEDIA_ROOT = BASE_DIR / 'media'
-
-# WhiteNoise serves static files
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
+# Media files (won't work on Vercel - use cloud storage for production)
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
@@ -96,3 +97,18 @@ LOGOUT_REDIRECT_URL = '/'
 LOGIN_URL = 'accounts:login'
 
 CART_SESSION_ID = 'cart'
+
+# Logging to see errors
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'root': {
+        'handlers': ['console'],
+        'level': 'INFO',
+    },
+}
