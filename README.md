@@ -31,9 +31,9 @@ Premium Indian Army merchandise e-commerce platform built with Django. Shop for 
 
 ## Reference Screenshots
 
-![Result](/media/products/2025/10/24/g1.png)
-![Result](/media/products/2025/10/24/g3.png)
-![Result](/media/products/2025/10/24/g2.png)
+![Result](/static/media/products/2025/10/24/g1.png)
+![Result](/static/media/products/2025/10/24/g3.png)
+![Result](/static/media/products/2025/10/24/g2.png)
 
 ## 🛠️ Tech Stack
 
